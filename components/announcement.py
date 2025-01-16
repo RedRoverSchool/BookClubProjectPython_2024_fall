@@ -264,3 +264,30 @@ class Announcement:
         self.fill_out_class_duration()
         self.fill_out_convenient_time()
         self.click_save_announcement_btn()
+
+    @allure.step("Проверяем, что все обязательные поля отмечены '*'/ 'Обязательное поле'")
+    def mandatory_fields_are_marked_check(self):
+        fields_to_check = [
+            ("//label[@for='id_first_name']//span[@class='asteriskField']", "id_first_name"),
+            ("//label[@for='id_last_name']//span[@class='asteriskField']", "id_last_name"),
+            ("//label[@for='id_telegram']//span[@class='asteriskField']", "id_telegram"),
+            ("//label[@for='id_phone']//span[@class='asteriskField']", "id_phone"),
+            ("//label[@for='id_description']//span[@class='asteriskField']", "id_description"),
+            ("//legend[@class='form-label requiredField']//span[@class='asteriskField']", "student_category"),
+            ("//label[@for='id_can_help']//span[@class='asteriskField']", "id_can_help"),
+            ("//label[@for='id_category']//span[@class='asteriskField']", "id_category"),
+            ("//label[@for='id_years_of_experience']//span[@class='asteriskField']", "id_years_of_experience"),
+            ("//label[@for='id_price']//span[@class='asteriskField']", "id_price"),
+            ("//label[@for='id_class_duration']//span[@class='asteriskField']", "id_class_duration"),
+        ]
+
+        for locator, field_name in fields_to_check:
+            field_mark = self.page.locator(locator)
+            assert field_mark.is_visible(), f"Отметка поля с локатором {field_name} не найдена"
+
+        download_photo_title_text = self.page.get_by_text("Рекомендуемое разрешение:").inner_text()
+        assert "Обязательное поле." in download_photo_title_text, (
+            f"Текст 'Обязательное поле.' не найден в {download_photo_title_text}"
+        )
+
+
